@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+
+    id 'project-versioning-conventions'
+}
+
+group = 'com.github.monaboiste'
+description = 'Yet Another Validation Library'
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+publishing {
+    publications {
+        yetanovalidate(MavenPublication) {
+            from components.java
+            afterEvaluate {
+                artifactId = jar.archiveBaseName
+            }
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    // Dev
+    implementation 'org.jetbrains:annotations:24.+'
+
+    def lombokVersion = '1.+'
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // Logging
+    api 'org.slf4j:slf4j-api:2.+'
+    implementation 'ch.qos.logback:logback-classic:1.+'
+
+    // Testing
+    testImplementation platform('org.junit:junit-bom:5.+')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.assertj:assertj-core:3.+'
+}

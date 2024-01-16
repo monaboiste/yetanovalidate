@@ -1,0 +1,21 @@
+/**
+ * Notes:
+ * <li>
+ * <ul>
+ * axion-release plugin (current: 1.16.1) uses Provider.forUseAtConfigurationTime
+ * which is deprecated and marked to be removed in Gradle 9.0
+ * (<a href="https://docs.gradle.org/8.5/userguide/upgrading_version_7.html#for_use_at_configuration_time_deprecation">source</a>).
+ * Run the gradle with <code>--warning-mode all</code> flag to see, if this deprecation still persists
+ * <ul>
+ * </li>
+ */
+
+plugins {
+    id 'pl.allegro.tech.build.axion-release'
+}
+
+project.version = scmVersion.version
+
+tasks.register('printVersion') {
+    println project.version
+}
