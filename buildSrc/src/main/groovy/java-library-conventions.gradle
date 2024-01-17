@@ -1,13 +1,11 @@
 plugins {
     id 'java'
     id 'java-library'
-    id 'maven-publish'
 
     id 'project-versioning-conventions'
 }
 
-group = 'com.github.monaboiste'
-description = 'Yet Another Validation Library'
+group = 'com.github.monaboiste.yetanovalidate'
 
 java {
     toolchain {
@@ -18,21 +16,6 @@ java {
 repositories {
     mavenLocal()
     mavenCentral()
-}
-
-publishing {
-    publications {
-        yetanovalidate(MavenPublication) {
-            from components.java
-            afterEvaluate {
-                artifactId = jar.archiveBaseName
-            }
-        }
-    }
-}
-
-test {
-    useJUnitPlatform()
 }
 
 dependencies {
@@ -53,4 +36,15 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.+')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.assertj:assertj-core:3.+'
+}
+
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(Test) {
+    testLogging {
+        showStandardStreams = true
+    }
 }

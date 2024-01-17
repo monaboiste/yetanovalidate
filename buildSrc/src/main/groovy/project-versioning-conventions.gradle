@@ -1,21 +1,24 @@
-/**
- * Notes:
- * <li>
- * <ul>
- * axion-release plugin (current: 1.16.1) uses Provider.forUseAtConfigurationTime
- * which is deprecated and marked to be removed in Gradle 9.0
- * (<a href="https://docs.gradle.org/8.5/userguide/upgrading_version_7.html#for_use_at_configuration_time_deprecation">source</a>).
- * Run the gradle with <code>--warning-mode all</code> flag to see, if this deprecation still persists
- * <ul>
- * </li>
+/*
+ * Nebula release plugin notes:
+ * - the plugin can be only applied on the root level
+ * - the plugin does not support the multiple project release from the same
+ *   repository - all artefacts must have the same version
  */
 
-plugins {
-    id 'pl.allegro.tech.build.axion-release'
-}
+gradle.rootProject {
+    apply plugin: 'nebula.release'
 
-project.version = scmVersion.version
+    nebulaRelease {
+        releaseBranchPatterns = [/master/]
+    }
+
+    ext['release.sanitizeVersion'] = true
+}
+gradle.rootProject.tasks.release.dependsOn(tasks.assemble, tasks.check)
 
 tasks.register('printVersion') {
+    group 'versioning'
+    description 'Print project version'
+
     println project.version
 }

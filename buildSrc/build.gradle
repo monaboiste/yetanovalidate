@@ -8,5 +8,5 @@ repositories {
 
 dependencies {
     // Tagging and artefact versioning
-    implementation 'pl.allegro.tech.build:axion-release-plugin:1.16.+'
+    implementation 'com.netflix.nebula:nebula-release-plugin:19.0.+'
 }

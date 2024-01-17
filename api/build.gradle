@@ -1,3 +1,6 @@
 plugins {
     id 'java-library-conventions'
+    id 'project-publishing-conventions'
 }
+
+description = 'Yet Another Validation Library'

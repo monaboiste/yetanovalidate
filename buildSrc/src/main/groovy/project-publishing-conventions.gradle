@@ -1,0 +1,25 @@
+plugins {
+    id 'maven-publish'
+}
+
+publishing {
+    publications {
+        yetanovalidate(MavenPublication) {
+            from components.java
+            versionMapping {
+                // use the versions resolved on the runtimeClasspath for dependencies declared in api
+                // which are mapped to compile scope (default)
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                // use the versions resolved on the runtimeClasspath for dependencies declared in implementation
+                // which are mapped to the runtime scope (default)
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+}
+
+tasks.publish.dependsOn(tasks.assemble, tasks.check)
