@@ -1,8 +1,7 @@
 plugins {
     id 'java'
     id 'java-library'
-
-    id 'project-versioning-conventions'
+    id 'project-publishing-conventions'
 }
 
 group = 'com.github.monaboiste.yetanovalidate'

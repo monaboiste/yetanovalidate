@@ -1,5 +1,30 @@
+/*
+ * Nebula release plugin notes:
+ * - the plugin can be only applied on the root level
+ * - the plugin does not support the multiple project release from the same
+ *   repository - all artefacts must have the same version
+ */
+
 plugins {
     id 'maven-publish'
+}
+
+gradle.rootProject {
+    apply plugin: 'nebula.release'
+
+    nebulaRelease {
+        releaseBranchPatterns = [/master/]
+    }
+
+    ext['release.sanitizeVersion'] = true
+}
+gradle.rootProject.tasks.release.dependsOn(tasks.assemble, tasks.check)
+
+tasks.register('printVersion') {
+    group 'versioning'
+    description 'Print project version'
+
+    println project.version
 }
 
 publishing {
