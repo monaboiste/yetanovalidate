@@ -7,7 +7,7 @@ plugins {
 }
 
 // Projects will have the same group by the convention
-group = 'com.github.monaboiste'
+group = 'com.github.monaboiste.yetanovalidate'
 
 java {
     toolchain {

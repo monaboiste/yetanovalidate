@@ -26,6 +26,7 @@ public class ValidationException extends RuntimeException {
      *     .doesNotSatisfy(isAdult())
      *     .withField("age")
      *     .withMessage("You're too young to drink an alcohol!")
+     *     .withCode("illegal_age")
      *     .withExceptionTypeOf(CannotBuyAlcoholException.class);
      * </pre>
      * @param instance object to validate
