@@ -103,10 +103,6 @@ class ValidationExceptionTest {
 
     @Test
     void throws_custom_exception_with_message() {
-        class CannotBuyAlcoholException extends ValidationException {
-            CannotBuyAlcoholException(final RuleViolation ruleViolation) { super(ruleViolation); }
-        }
-
         var underagePerson = underagePerson();
 
         var rule = throwWhen(underagePerson)
@@ -131,5 +127,11 @@ class ValidationExceptionTest {
                 .extracting(PersonFixture.Address::line1);
 
         assertThat(rule.instance).isEqualTo(person.livesAt().line1());
+    }
+
+    static class CannotBuyAlcoholException extends ValidationException {
+        public CannotBuyAlcoholException(final RuleViolation ruleViolation) {
+            super(ruleViolation);
+        }
     }
 }

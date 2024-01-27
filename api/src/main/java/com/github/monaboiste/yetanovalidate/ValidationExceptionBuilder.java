@@ -12,15 +12,16 @@ public abstract class ValidationExceptionBuilder
         <SELF extends ValidationExceptionBuilder<SELF, ACTUAL>, ACTUAL> {
 
     private final SELF self;
-    private final RuleViolation.RuleViolationBuilder ruleViolationBuilder
-            = new RuleViolation.RuleViolationBuilder();
+    private final RuleViolation.RuleViolationBuilder ruleViolationBuilder;
+
     protected ACTUAL instance;
     private Predicate<? super ACTUAL> predicate;
 
+    @SuppressWarnings("unchecked")
     protected ValidationExceptionBuilder(final ACTUAL instance, Class<?> selfType) {
-        // noinspection unchecked
         this.self = (SELF) selfType.cast(this);
         this.instance = instance;
+        this.ruleViolationBuilder = new RuleViolation.RuleViolationBuilder();
     }
 
     /**
@@ -31,12 +32,11 @@ public abstract class ValidationExceptionBuilder
      * @param <BUILDER> this builder class type
      * @return this builder
      */
+    @SuppressWarnings("unchecked")
     public <P, BUILDER extends ValidationExceptionBuilder<?, P>>
     BUILDER extracting(final Function<? super ACTUAL, ? extends P> extractor) {
         P property = extractor.apply(instance);
-        // noinspection unchecked
         this.instance = (ACTUAL) property;
-        // noinspection unchecked
         return (BUILDER) self;
     }
 
@@ -118,14 +118,17 @@ public abstract class ValidationExceptionBuilder
             throw exceptionClazz
                     .getConstructor(RuleViolation.class)
                     .newInstance(this.ruleViolationBuilder.build());
-        } catch (NoSuchMethodException
-                 | SecurityException
+        } catch (NoSuchMethodException ex) {
+            throw new YetanoInternalException(
+                    ("Fatal: Missing ctor(RuleViolation) for [%s] exception not found " +
+                            "or the exception class is nested in another class").formatted(exceptionClazz.getName()), ex);
+        } catch (SecurityException
                  | InstantiationException
                  | IllegalAccessException
                  | IllegalArgumentException
                  | InvocationTargetException ex) {
             throw new YetanoInternalException(
-                    "Constructor in class not found (RuleViolation) or it's not public", ex);
+                    "Fatal: Cannot instantiate [%s] exception".formatted(exceptionClazz.getName()), ex);
         }
     }
 }

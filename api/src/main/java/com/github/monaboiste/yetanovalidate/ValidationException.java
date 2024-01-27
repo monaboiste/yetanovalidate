@@ -2,6 +2,10 @@ package com.github.monaboiste.yetanovalidate;
 
 import lombok.Getter;
 
+/**
+ * The exception class, which extends this class, may be nested static BUT MUSTN'T BE INNER of another class.
+ * The class must provide the 1-param {@link RuleViolation} constructor as well.
+ */
 @Getter
 public class ValidationException extends RuntimeException {
 
