@@ -9,6 +9,5 @@ plugins {
 description = 'Yet Another Validation Library'
 
 dependencies {
-    implementation project(':test-fixtures')
     testImplementation project(':test-fixtures')
 }
