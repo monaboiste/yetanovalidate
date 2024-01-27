@@ -1,15 +1,15 @@
 package com.github.monaboiste.yetanovalidate;
 
+import com.github.moneboiste.yetanovalidate.fixtures.PersonFixture;
+import com.github.moneboiste.yetanovalidate.fixtures.PersonFixture.Person;
 import org.junit.jupiter.api.Test;
 
-import static com.github.monaboiste.yetanovalidate.ExceptionFixture.CannotBuyAlcoholException;
-import static com.github.monaboiste.yetanovalidate.ExceptionFixture.cannotBuyAlcoholExceptionType;
-import static com.github.monaboiste.yetanovalidate.PersonFixture.person;
-import static com.github.monaboiste.yetanovalidate.PersonFixture.personWithInvalidEmailFormat;
-import static com.github.monaboiste.yetanovalidate.PersonFixture.underagePerson;
-import static com.github.monaboiste.yetanovalidate.PredicateFixture.isAdult;
-import static com.github.monaboiste.yetanovalidate.PredicateFixture.stringMatchesEmailFormat;
 import static com.github.monaboiste.yetanovalidate.ValidationException.throwWhen;
+import static com.github.moneboiste.yetanovalidate.fixtures.PersonFixture.person;
+import static com.github.moneboiste.yetanovalidate.fixtures.PersonFixture.personWithInvalidEmailFormat;
+import static com.github.moneboiste.yetanovalidate.fixtures.PersonFixture.underagePerson;
+import static com.github.moneboiste.yetanovalidate.fixtures.PredicateFixture.isAdult;
+import static com.github.moneboiste.yetanovalidate.fixtures.PredicateFixture.stringMatchesEmailFormat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,11 +22,10 @@ class ValidationExceptionTest {
         var validPerson = person();
 
         var rule = throwWhen(validPerson)
-                .extracting(PersonFixture::email)
+                .extracting(Person::email)
                 .doesNotSatisfy(stringMatchesEmailFormat());
 
         assertThatNoException().isThrownBy(rule::check);
-
     }
 
     @Test
@@ -34,7 +33,7 @@ class ValidationExceptionTest {
         var personWithInvalidEmail = personWithInvalidEmailFormat();
 
         var rule = throwWhen(personWithInvalidEmail)
-                .extracting(PersonFixture::email)
+                .extracting(Person::email)
                 .doesNotSatisfy(stringMatchesEmailFormat());
 
         assertThatThrownBy(rule::check).isInstanceOf(ValidationException.class);
@@ -45,7 +44,7 @@ class ValidationExceptionTest {
         var underagePerson = underagePerson();
 
         var rule = throwWhen(underagePerson)
-                .extracting(PersonFixture::age)
+                .extracting(Person::age)
                 .doesNotSatisfy(isAdult());
 
         assertThatThrownBy(rule::check).isInstanceOf(ValidationException.class);
@@ -56,7 +55,7 @@ class ValidationExceptionTest {
         var personWithInvalidEmail = personWithInvalidEmailFormat();
 
         var rule = throwWhen(personWithInvalidEmail)
-                .extracting(PersonFixture::email)
+                .extracting(Person::email)
                 .doesNotSatisfy(stringMatchesEmailFormat())
                 .withCode("bad_email_format");
 
@@ -73,7 +72,7 @@ class ValidationExceptionTest {
         var personWithInvalidEmail = personWithInvalidEmailFormat();
 
         var rule = throwWhen(personWithInvalidEmail)
-                .extracting(PersonFixture::email)
+                .extracting(Person::email)
                 .doesNotSatisfy(stringMatchesEmailFormat())
                 .withField("email");
 
@@ -90,7 +89,7 @@ class ValidationExceptionTest {
         var personWithInvalidEmail = personWithInvalidEmailFormat();
 
         var rule = throwWhen(personWithInvalidEmail)
-                .extracting(PersonFixture::email)
+                .extracting(Person::email)
                 .doesNotSatisfy(stringMatchesEmailFormat())
                 .withMessage("Email has incorrect format.");
 
@@ -104,15 +103,19 @@ class ValidationExceptionTest {
 
     @Test
     void throws_custom_exception_with_message() {
+        class CannotBuyAlcoholException extends ValidationException {
+            CannotBuyAlcoholException(final RuleViolation ruleViolation) { super(ruleViolation); }
+        }
+
         var underagePerson = underagePerson();
 
         var rule = throwWhen(underagePerson)
-                .extracting(PersonFixture::age)
+                .extracting(Person::age)
                 .doesNotSatisfy(isAdult())
                 .withField("age")
                 .withMessage("You're too young to drink an alcohol!");
 
-        var cannotBuyAlcoholExceptionClass = cannotBuyAlcoholExceptionType();
+        var cannotBuyAlcoholExceptionClass = CannotBuyAlcoholException.class;
 
         assertThatThrownBy(() -> rule.withExceptionTypeOf(cannotBuyAlcoholExceptionClass))
                 .isInstanceOf(CannotBuyAlcoholException.class)
@@ -124,7 +127,7 @@ class ValidationExceptionTest {
         var person = person();
 
         var rule = throwWhen(person)
-                .extracting(PersonFixture::livesAt)
+                .extracting(Person::livesAt)
                 .extracting(PersonFixture.Address::line1);
 
         assertThat(rule.instance).isEqualTo(person.livesAt().line1());

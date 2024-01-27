@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 rootProject.name = 'yetanovalidate'
 
 include ':api'
+include ':test-fixtures'
