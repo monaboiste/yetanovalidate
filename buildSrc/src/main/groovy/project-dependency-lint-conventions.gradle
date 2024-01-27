@@ -1,0 +1,11 @@
+gradle.rootProject {
+    /*
+     * Nebula lint plugin notes:
+     * - the plugin can be only applied on the root level
+     */
+    apply plugin: 'nebula.lint'
+
+    gradleLint {
+        rules = ['unused-dependency']
+    }
+}

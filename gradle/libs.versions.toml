@@ -8,13 +8,14 @@ lombok = '8.4'
 sonarlint = '3.4.4'
 
 [plugins]
-nebula-release = { id = 'nebula.release', version.ref = 'nebula' }
-lombok = { id = 'io.freefair.lombok', version.ref = 'lombok' }
-sonarlint = { id = 'name.remal.sonarlint', version.ref = 'sonarlint' }
+# Nothing here - the external plugins need to be added as implementation dependencies before they can be
+# applied in precompiled script plugin (source: https://docs.gradle.org/current/userguide/custom_plugins.html#applying_external_plugins_in_precompiled_script_plugins)
 
 [libraries]
 # Publishing and versioning
 nebula-release = { group = 'com.netflix.nebula', name = 'nebula-release-plugin', version.ref = 'nebula' }
+# Project dependency lint
+nebula-lint = { group = 'com.netflix.nebula', name = 'gradle-lint-plugin', version.ref = 'nebula' }
 
 # Development
 lombok = { group = 'io.freefair.gradle', name = 'lombok-plugin', version.ref = 'lombok' }

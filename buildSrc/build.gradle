@@ -6,6 +6,7 @@ dependencies {
     implementation(libs.lombok)
 
     implementation(libs.nebula.release)
+    implementation(libs.nebula.lint)
 
     implementation(libs.sonarlint)
 }

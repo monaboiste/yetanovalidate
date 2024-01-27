@@ -11,8 +11,9 @@ Nope. I made the project on a whim to test some ideas. I don't expect me going b
 ### Where are the artefacts?
 The artefacts aren't published anywhere. The only way to use the library is compiling it yourself:
 ```shell
-./gradlew build publishToMavenLocal
+./gradlew build publishDev
 ```
+The artefact will be published to maven local.  
 Applying:
 ```groovy
 implementation("com.github.monaboiste.yetanovalidate:api:${version}")
@@ -22,7 +23,7 @@ implementation("com.github.monaboiste.yetanovalidate:api:${version}")
 ```java
 throwWhen(underagePerson)                                  // object instance to assert
     .extracting(Person::age)                               // optionally extract the nested attribute
-    .doesNotSatisfy(isAdult())                             // provide a predicate to the instance against
+    .doesNotSatisfy(isAdult())                             // provide a predicate to test the instance against
     .withField("age")                                      // optionally provide the name of the field
     .withMessage("You're too young to drink an alcohol!")  // optionally provide the error message
     .withCode("illegal_age")                               // optionally provide the error code
