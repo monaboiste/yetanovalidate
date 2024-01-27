@@ -1,0 +1,73 @@
+/*
+ * The plugin should be applied after 'java' plugin.
+ */
+
+plugins {
+    id('java')
+    id('maven-publish')
+}
+
+gradle.rootProject {
+    /*
+     * Nebula release plugin notes:
+     * - the plugin can be only applied on the root level
+     * - the plugin does not support the multiple project release from the same
+     *   repository - all artefacts must have the same version
+     */
+    apply plugin: 'nebula.release'
+
+    nebulaRelease {
+        releaseBranchPatterns = [/master/]
+    }
+
+    ext['release.sanitizeVersion'] = true
+}
+
+publishing {
+    publications {
+        yetanovalidate(MavenPublication) {
+            from components.java
+            versionMapping {
+                // use the versions resolved on the runtimeClasspath for dependencies declared in api
+                // which are mapped to compile scope (default)
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                // use the versions resolved on the runtimeClasspath for dependencies declared in implementation
+                // which are mapped to the runtime scope (default)
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+}
+
+tasks.register('printVersion') {
+    group 'publishing'
+    description 'Print current project version'
+
+    println project.version
+}
+
+tasks.register('publishFinal') {
+    group 'publishing'
+    description 'Generates a final version of the artefact'
+
+    dependsOn(gradle.rootProject.tasks.final, tasks.publishToMavenLocal) // to maven local for now
+
+    doLast {
+        logger.lifecycle("##version[${project.version}]")
+    }
+}
+
+tasks.register('publishDev') {
+    group 'publishing'
+    description 'Generates a final version of the artefact'
+
+    dependsOn(gradle.rootProject.tasks.devSnapshot, tasks.publishToMavenLocal) // to maven local for now
+
+    doLast {
+        logger.lifecycle("##version[${project.version}]")
+    }
+}

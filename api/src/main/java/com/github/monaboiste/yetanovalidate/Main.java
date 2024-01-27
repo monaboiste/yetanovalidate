@@ -9,3 +9,10 @@ public class Main {
         log.info("Testing... {}, {}, {}", 1, 2, 3);
     }
 }
+
+class MakeSonarUnhappy {
+    /**
+     * This declaration should break the rule squid:S3077.
+     */
+    private volatile MakeSonarUnhappy instance;
+}

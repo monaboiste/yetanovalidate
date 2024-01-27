@@ -1,0 +1,20 @@
+plugins {
+    id('java')
+    id('name.remal.sonarlint')
+}
+
+sonarLint {
+    isGeneratedCodeIgnored = false
+    ignoredPaths.add("${rootDir}/buildSrc/**")
+
+    // reports location defaults to layout.buildDirectory.dir('/reports/sonarlint')
+}
+
+tasks.register('lint') {
+    group 'verification'
+    description 'Run SonarLint checks without SonarQube server'
+
+    dependsOn(tasks.sonarlintMain)
+}
+
+tasks.check.dependsOn(tasks.lint)

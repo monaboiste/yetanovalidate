@@ -1,12 +1,11 @@
 plugins {
-    id 'groovy-gradle-plugin'
-}
-
-repositories {
-    gradlePluginPortal()
+    id('groovy-gradle-plugin')
 }
 
 dependencies {
-    // Tagging and artefact versioning
-    implementation 'com.netflix.nebula:nebula-release-plugin:19.0.+'
+    implementation(libs.lombok)
+
+    implementation(libs.nebula.release)
+
+    implementation(libs.sonarlint)
 }

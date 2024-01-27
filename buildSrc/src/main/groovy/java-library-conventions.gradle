@@ -1,49 +1,26 @@
 plugins {
-    id 'java'
-    id 'java-library'
-    id 'project-publishing-conventions'
+    id('java')
+    id('java-library')
+    id('io.freefair.lombok')
+
+    id('java-logging-conventions')
 }
 
-group = 'com.github.monaboiste.yetanovalidate'
+// Projects will have the same group by the convention
+group = 'com.github.monaboiste'
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
     }
 }
 
-repositories {
-    mavenLocal()
-    mavenCentral()
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked"
+    options.compilerArgs << "-Xlint:deprecation"
 }
 
 dependencies {
     // Dev
-    implementation 'org.jetbrains:annotations:24.+'
-
-    def lombokVersion = '1.+'
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
-    // Logging
-    api 'org.slf4j:slf4j-api:2.+'
-    implementation 'ch.qos.logback:logback-classic:1.+'
-
-    // Testing
-    testImplementation platform('org.junit:junit-bom:5.+')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.assertj:assertj-core:3.+'
-}
-
-
-test {
-    useJUnitPlatform()
-}
-
-tasks.withType(Test) {
-    testLogging {
-        showStandardStreams = true
-    }
+    implementation(libs.annotations)
 }
